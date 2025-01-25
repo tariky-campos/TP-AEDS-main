@@ -7,99 +7,139 @@
 #define dois 2
 #define tres 3
 
-rochamineral InicializaRocha(rochamineral* rocha, float lat_rocha, float long_rocha, float peso, L_Minerais* lista_mineral) {
-     //inicia lista mineral na rocha
-    set_listaminerais(rocha, lista_mineral);
+void InicializaRocha(rochamineral *rocha, float peso, char *categoria, double latitude, double longitude)
+{
    
     setPeso(rocha, peso);
-    set_latRocha(rocha, lat_rocha);
-    set_longRocha(rocha, long_rocha);
-    char* classificacao = classificar(lista_mineral);
-    set_categoria(rocha, classificacao);
-    return *rocha;
+    setCategoria(rocha, categoria);
+    setLocalizacao(rocha, latitude, longitude);
 }
 
-void set_listaminerais(rochamineral* rocha, L_Minerais* lista_mineral) {
-    rocha->L_Mineral = lista_mineral;
-}
-
-
-char* classificar(L_Minerais *pLista)
+char *Categoria(rochamineral *rocha)
 {
-    int aux = TMListaM(pLista);
-    if (aux == 0) {
-        printf("Nao tem mineral\n");
-        return "0";
-    }
-    
-    if (aux == 1)
+    int NumMine = rocha->L_Mineral.pUltimo;
+    if (NumMine == zero)
     {
-        {
-            if (strcmp(pLista->ListaMINERAIS[0].Chave.nomeM, "Ferrolita") == 0)
-            {
-                return "Ferrom";
-            }
-            else if (strcmp(pLista->ListaMINERAIS[0].Chave.nomeM, "Solarium") == 0)
-            {
-                return "Solaris";
-            }
-        }
+        strcpy(rocha->categoria, "Sem Minerais");
+        return rocha->categoria;
     }
-    if (aux == 2)
+    int ferrolita = zero, solarium = zero, aquavitae = zero, terranita = zero, calaris = zero;
+
+    for (int i = rocha->L_Mineral.pPrimeiro; i < rocha->L_Mineral.pUltimo; i++)
     {
-        if (strcmp(pLista->ListaMINERAIS[0].Chave.nomeM, "Terranita") == 0 || (strcmp(pLista->ListaMINERAIS[1].Chave.nomeM, "Terranita")) == 0)
+        if (strcmp(rocha->L_Mineral.ListaMINERAIS[i].nome, "Ferrolita") == zero)
         {
-            if (strcmp(pLista->ListaMINERAIS[0].Chave.nomeM, "Calaris") == 0 || (strcmp(pLista->ListaMINERAIS[1].Chave.nomeM, "Calaris")) == 0){
-                return "Terrolis";
-            }
-            else if (strcmp(pLista->ListaMINERAIS[0].Chave.nomeM, "Solarium") == 0 || (strcmp(pLista->ListaMINERAIS[1].Chave.nomeM, "Solarium")) == 0){
-                return "Terrasol";
-            }
-            else if (strcmp(pLista->ListaMINERAIS[0].Chave.nomeM, "Aquavitae") == 0 || (strcmp(pLista->ListaMINERAIS[1].Chave.nomeM, "Aquavitae")) == 0){
-                return "Aquaterra";
-            }
-            else if (strcmp(pLista->ListaMINERAIS[0].Chave.nomeM, "Ferrolita") == 0 || (strcmp(pLista->ListaMINERAIS[1].Chave.nomeM, "Ferrolita")) == 0){
-                return "Terralis";
-            }
+            ferrolita = um;
         }
-        if (strcmp(pLista->ListaMINERAIS[0].Chave.nomeM, "Aquavitae") == 0 || (strcmp(pLista->ListaMINERAIS[1].Chave.nomeM, "Aquavitae") == 0)){
-            if(strcmp(pLista->ListaMINERAIS[0].Chave.nomeM, "Calaris") == 0 || (strcmp(pLista->ListaMINERAIS[1].Chave.nomeM, "Calaris")) == 0){
-                return "Calquer";
-            }
+        else if (strcmp(rocha->L_Mineral.ListaMINERAIS[i].nome, "Solarium") == zero)
+        {
+            solarium = um;
         }
-        if (strcmp(pLista->ListaMINERAIS[0].Chave.nomeM, "Ferrolita") == 0 || (strcmp(pLista->ListaMINERAIS[1].Chave.nomeM, "Ferrolita")) == 0){
-            if (strcmp(pLista->ListaMINERAIS[0].Chave.nomeM, "Solarium") == 0 || (strcmp(pLista->ListaMINERAIS[1].Chave.nomeM, "Solarium")) == 0){
-                return "Solarisfer";
-            }
-            else if (strcmp(pLista->ListaMINERAIS[0].Chave.nomeM, "Aquavitae") == 0 || (strcmp(pLista->ListaMINERAIS[1].Chave.nomeM, "Aquavitae")) == 0){
-                return "Aquaferro";
-            }
-        }   
+        else if (strcmp(rocha->L_Mineral.ListaMINERAIS[i].nome, "Aquavitae") == zero)
+        {
+            aquavitae = um;
+        }
+        else if (strcmp(rocha->L_Mineral.ListaMINERAIS[i].nome, "Terranita") == zero)
+        {
+            terranita = um;
+        }
+        else if (strcmp(rocha->L_Mineral.ListaMINERAIS[i].nome, "Calaris") == zero)
+        {
+            calaris = um;
+        }
     }
-    if (aux == 3) {
-        return "Aquacalis";
+
+    if (ferrolita && NumMine == um)
+    {
+        strcpy(rocha->categoria, "Ferrom");
     }
-    return NULL;
+    else if (solarium && NumMine == um)
+    {
+        strcpy(rocha->categoria, "Solaris");
+    }
+    else if (ferrolita && aquavitae && NumMine == dois)
+    {
+        strcpy(rocha->categoria, "Aquaferro");
+    }
+    else if (terranita && calaris && NumMine == dois)
+    {
+        strcpy(rocha->categoria, "Terrolis");
+    }
+    else if (terranita && solarium && NumMine == dois)
+    {
+        strcpy(rocha->categoria, "Terrasol");
+    }
+    else if (aquavitae && terranita && NumMine == dois)
+    {
+        strcpy(rocha->categoria, "Aquaterra");
+    }
+    else if (calaris && aquavitae && NumMine == dois)
+    {
+        strcpy(rocha->categoria, "Calquer");
+    }
+    else if (solarium && ferrolita && NumMine == dois)
+    {
+        strcpy(rocha->categoria, "Solarisfer");
+    }
+    else if (terranita && ferrolita && NumMine == dois)
+    {
+        strcpy(rocha->categoria, "Terralis");
+    }
+    else if (aquavitae && calaris && ferrolita && NumMine == tres)
+    {
+        strcpy(rocha->categoria, "Aquacalis");
+    }
+    else
+    {
+        strcpy(rocha->categoria, "Desconhecida");
+    }
+
+    return rocha->categoria;
+}
+
+void setIdentificador(rochamineral *rocha, int id)
+{
+    rocha->id = id;
 }
 void setPeso(rochamineral *rocha, float peso)
 {
     rocha->peso = peso;
 }
-void set_categoria(rochamineral *rocha, char *categoria)
+void setCategoria(rochamineral *rocha, char *categoria)
 {
     strcpy(rocha->categoria, categoria);
 }
-
-void set_latRocha(rochamineral *rocha, float lat_rocha){
-    rocha->latitude = lat_rocha;
+void setData(rochamineral *rocha, char *data)
+{
+    strcpy(rocha->data, data);
 }
-void set_longRocha(rochamineral *rocha, float long_rocha){
-    rocha->longitude = long_rocha;
+void setLocalizacao(rochamineral *rocha, double latitude, double longitude)
+{
+    rocha->latitude = latitude;
+    rocha->longitude = longitude;
 }
 
-
+int getIdentificador(rochamineral *rocha)
+{
+    return rocha->id;
+}
 float getPeso(rochamineral *rocha)
 {
     return rocha->peso;
 }
-
+char *getCategoria(rochamineral *rocha)
+{
+    return rocha->categoria;
+}
+char *getData(rochamineral *rocha)
+{
+    return rocha->data;
+}
+double getLatitude(rochamineral *rocha)
+{
+    return rocha->latitude;
+}
+double getLongitude(rochamineral *rocha)
+{
+    return rocha->longitude;
+}
