@@ -1,77 +1,57 @@
-#include "L_Mineral.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#define MaxTam 5
+#include "L_Mineral.h"
 
-void FLVazia_L(L_Minerais* pLista) {
-    pLista->pPrimeiro = 0;
-    pLista->pUltimo = pLista->pPrimeiro;
+void FLVazia_L(L_Minerais *ListaMi)
+{
+    ListaMi->pPrimeiro = 0;
+    ListaMi->pUltimo = ListaMi->pPrimeiro;
 }
 
-int LEhVazia_L(L_Minerais* pLista) {
-    return pLista->pUltimo == pLista->pPrimeiro;
+int LEhVazia_L(L_Minerais *ListaMi)
+{
+    return (ListaMi->pUltimo == ListaMi->pPrimeiro);
 }
 
-void LInsere_L(L_Minerais* pLista, Mineral_L x) {
-    if (pLista->pUltimo >= MaxTam) {
-        printf("ERRO DE INCERCAO\n");
-        return;
-    }
-    pLista->ListaMINERAIS[pLista->pUltimo].Chave = x;
-    pLista->pUltimo++; 
-}
-
-int LRetira_L(L_Minerais* pLista, char *nomeM, Mineral_L *pX) {
-    int cont;
-    
-    if (LEhVazia_L(pLista)) {
-        return 0;
-    }
-    for (cont = pLista->pPrimeiro; cont <= pLista->pUltimo; cont++) {
-        if (strcmp(nomeM, pLista->ListaMINERAIS[cont].Chave.nomeM) == 0) {
-            *pX = pLista->ListaMINERAIS[cont].Chave;
-            for (cont += 1; cont < pLista->pUltimo; cont++) {
-                pLista->ListaMINERAIS[cont - 1] = pLista->ListaMINERAIS[cont];
-            }
-            pLista->pUltimo--;
-        }
-    }
+int LInsere_L(L_Minerais *ListaMi, Mineral item)
+{
+    if (ListaMi->pUltimo == MAXTAM)
+        return 0; // Lista cheia
+    ListaMi->ListaMINERAIS[ListaMi->pUltimo++] = item;
     return 1;
 }
 
-void LImprime_L(L_Minerais* pLista) {
-    int i;
-    for (i = pLista->pPrimeiro; i < pLista->pUltimo; i++) {
-         printf("Nome: %s, Dureza: %.2f, Reatividade: %.2f, Cor: %s\n",
-               pLista->ListaMINERAIS[i].Chave.nomeM,
-               pLista->ListaMINERAIS[i].Chave.dureza,
-               pLista->ListaMINERAIS[i].Chave.reatividade,
-               pLista->ListaMINERAIS[i].Chave.cor);
-    }
-}
-
-int TMListaM(L_Minerais *pLista)
+int LRetira_L(L_Minerais *ListaMi, char *nome, Mineral *pX)
 {
-    int count = 0;
-    for (int cont = pLista->pPrimeiro; cont < pLista->pUltimo; cont++){
-        count++;
+    int i, cont;
+    for (i = 0; i < ListaMi->pUltimo; i++)
+    {
+        if (strcmp(ListaMi->ListaMINERAIS[i].nome, nome) == 0)
+        {
+            *pX = ListaMi->ListaMINERAIS[i];
+            ListaMi->pUltimo--;
+
+            for (cont = i + 1; cont <= ListaMi->pUltimo; cont++)
+            {
+                ListaMi->ListaMINERAIS[cont - 1] = ListaMi->ListaMINERAIS[cont];
+            }
+            return 1;
+        }
     }
-    
-    return count;
+    return 0;
 }
 
-void PListaMinerais(L_Minerais* pLista, Mineral_L* mineral) {
-    FLVazia_L(pLista);
+void LImprime_L(L_Minerais *L_mineral)
+{
+    int i;
 
-    Mineral_L Ferrolita = Inicializa_mineral(mineral, "Ferrolita", 0.5, 0.7, "Cinza");
-    Mineral_L Solarium = Inicializa_mineral(mineral, "Solarium", 0.9, 0.2, "Amarelo");
-    Mineral_L Aquavitae = Inicializa_mineral(mineral, "Aquavitae", 0.5, 0.8, "Azul");
-    Mineral_L Terranita = Inicializa_mineral(mineral, "Terranita", 0.7, 0.6, "Marrom");
-    Mineral_L Calaris = Inicializa_mineral(mineral, "Calaris", 0.6, 0.5, "Vermelho");
-
-    LInsere_L(pLista, Ferrolita);
-    LInsere_L(pLista, Solarium);
-    LInsere_L(pLista, Aquavitae);
-    LInsere_L(pLista, Terranita);
-    LInsere_L(pLista, Calaris);
+    printf("minerais:\n");
+    for (i = L_mineral->pPrimeiro; i < L_mineral->pUltimo; i++)
+    {
+        printf("Nome: %s\n", L_mineral->ListaMINERAIS[i].nome);
+        printf("Cor: %s\n", L_mineral->ListaMINERAIS[i].cor);
+        printf("Dureza: %.3lf\n", L_mineral->ListaMINERAIS[i].dureza);
+        printf("Reatividade: %.3lf\n\n", L_mineral->ListaMINERAIS[i].reatividade);
+    }
 }

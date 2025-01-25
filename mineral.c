@@ -1,50 +1,90 @@
-#include "Mineral.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "mineral.h"
+#define zero 0
 
-Mineral_L Inicializa_mineral(Mineral_L* mineral, char *nomeM, float dureza, float reatividade, char *cor) {
-    set_nomeM(mineral, nomeM);
-    set_dureza(mineral, dureza);
-    set_reatividade(mineral, reatividade);
-    set_cor(mineral, cor);
-
-    return *mineral; 
+void InicializaMineral(Mineral *mineral, char *nome, char *cor, double dureza, double reatividade)
+{
+    setNome(mineral, nome);
+    setCor(mineral, cor);
+    setDureza(mineral, reatividade);
+    setReatividade(mineral, dureza);
 }
-Mineral_L Inicializa_mineral2(Mineral_L*mineral, char *nomeM) {
-    set_nomeM(mineral, nomeM);
-
-    return *mineral;
+void Lis_Minerais(Mineral *mineral, char *nome){
+    if (strcmp(nome, "Ferrolita") == zero)
+    {
+        strcpy(mineral->nome, "Ferrolita");
+        strcpy(mineral->cor, "Acinzentado");
+        mineral->dureza = 0.5;
+        mineral->reatividade = 0.7;
+    }
+    else if (strcmp(nome, "Solarium") == zero)
+    {
+        strcpy(mineral->nome, "Solarium");
+        strcpy(mineral->cor, "Amarelo");
+        mineral->dureza = 0.9;
+        mineral->reatividade = 0.2;
+    }
+    else if (strcmp(nome, "Aquavitae") == zero)
+    {
+        strcpy(mineral->nome, "Aquavitae");
+        strcpy(mineral->cor, "Azulado");
+        mineral->dureza = 0.5;
+        mineral->reatividade = 0.8;
+    }
+    else if (strcmp(nome, "Terranita") == zero)
+    {
+        strcpy(mineral->nome, "Terranita");
+        strcpy(mineral->cor, "Marrom");
+        mineral->dureza = 0.7;
+        mineral->reatividade = 0.6;
+    }
+    else if (strcmp(nome, "Calaris") == zero)
+    {
+        strcpy(mineral->nome, "Calaris");
+        strcpy(mineral->cor, "Vermelho");
+        mineral->dureza = 0.6;
+        mineral->reatividade = 0.5;
+    }
+    else
+    {
+        printf("Pedra invalida, digite novamente:");
+    }
 }
 
-char* get_nomeM(Mineral_L* mineral) {
-    return mineral->nomeM;
+void setNome(Mineral *mineral, char *nome)
+{
+    strcpy(mineral->nome, nome);
 }
-
-float get_dureza(Mineral_L* mineral) {
-    return mineral->dureza;
+void setCor(Mineral *mineral, char *cor)
+{
+    strcpy(mineral->cor, cor);
 }
-
-float get_reatividade(Mineral_L* mineral) {
-    return mineral->reatividade;
-}
-
-char* get_cor(Mineral_L* mineral) {
-    return mineral->cor;
-}
-
-void set_nomeM(Mineral_L* mineral, char *nomeM) {
-    strcpy(mineral->nomeM, nomeM);
-}
-
-void set_dureza(Mineral_L* mineral, float dureza) {
+void setDureza(Mineral *mineral, double dureza)
+{
     mineral->dureza = dureza;
 }
-
-void set_reatividade(Mineral_L* mineral, float reatividade) {
+void setReatividade(Mineral *mineral, double reatividade)
+{
     mineral->reatividade = reatividade;
 }
 
-void set_cor(Mineral_L* mineral, char *cor) {
-    strcpy(mineral->cor, cor);
+///////////
+
+char *getNome(Mineral *mineral)
+{
+    return mineral->nome;
+}
+char *getCor(Mineral *mineral)
+{
+    return mineral->cor;
+}
+double getDureza(Mineral *mineral)
+{
+    return mineral->dureza;
+}
+double getReatividade(Mineral *mineral)
+{
+    return mineral->reatividade;
 }

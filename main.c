@@ -1,89 +1,103 @@
+#include "compartimento.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "compartimento.h"
-#include <math.h>
 #include <time.h>
-#define Maxtam 255
-#define miner 50
 
-// Função principal
-int main() {
-    printf("3333333\n");
-    
-    clock_t inicio = clock();
+int main()
+{
+    clock_t start, stop;
 
-    int num_Operacoes;
+    L_Compart L_rochas;
+
+    int N_rochas;
     int comparacoes = 0;
     int trocas = 0;
-    char nomearq[255];
+    float latitude, longitude;
+    float peso_r;
+    char linha[300];
 
-    L_Compart compartimento;
-    Inicializar_L_compart(&compartimento);
+    printf("Digite o nome do arquivo: ");
 
-    FILE *arq;
-    printf("Insira o nome do arquivo: \n");
-    scanf("%49s", nomearq);
-    arq = fopen(nomearq, "r");
-        if(arq == NULL){
-            printf("Falha no arquivo.\n");
-            exit(0);
-        }
-    
-    fscanf(arq, "%d", &num_Operacoes);
+    char nomearq[100];
+    scanf("%32s", nomearq);
+    FILE *arq = fopen(nomearq, "r");
 
-    for(int i=0;i<num_Operacoes;i++){
-        rochamineral newRocha;
-        float latitude, longitude, peso;
-        char minerais[100];
-        Mineral_L n;
-        L_Minerais ListaMin;
+    if (arq == NULL)
+    {
+        perror("ERRO!!\n");
+        return 1;
+    }
 
-        fscanf(arq, "%f %f %f", &latitude, &longitude, &peso);
+    fscanf(arq, "%d", &N_rochas);
+    FLVazia_R(&L_rochas, N_rochas);
+    start = clock();
+    for (int i = 0; i < N_rochas; i++)
+    {
+        rochamineral rochas;
+        Mineral mineral;
 
-        FLVazia_L(&ListaMin);
-        fgets(minerais, 100, arq);
+        fscanf(arq, "%f %f %f", &latitude, &longitude, &peso_r);
 
-        if(minerais[strlen(minerais)-1] == '\n'){
-            minerais[strlen(minerais)-1] = '\0';
-        }
-        else{
-            minerais[strlen(minerais)] = '\0';
+        FLVazia_L(&rochas.L_Mineral);
+        fgets(linha, sizeof(linha), arq);
+
+        if (linha[strlen(linha) - 1] == '\n')
+        {
+            linha[strlen(linha) - 1] = '\0';
         }
 
         const char delim[] = " ";
-        char *parte = strtok(minerais, delim);
+        char *parteMinerais = strtok(linha, delim);
 
-        while(parte != NULL){
-            strcpy(n.nomeM, parte);
-            LInsere_L(&ListaMin, n);
-            parte = strtok(NULL, delim);
-        }
-
-        newRocha = InicializaRocha(&newRocha, latitude, longitude, peso, &ListaMin);
-        LInsere_R(&compartimento, newRocha);
-
-        int caso;
-        printf("Digite 1-SelectionSort\n");
-        scanf("%d", &caso);
-        switch (caso)
+        while (parteMinerais != NULL)
         {
-        case 1:{
-            selection(compartimento.vetor, compartimento.tamanho, &comparacoes, &trocas);
-            LImprime_R(&compartimento);
-            printf("comparacoes: %d trocas: %d", comparacoes, trocas);
-            fclose(arq);
-
-            clock_t fim = clock();
-            double tempo_decorrido = (double)(fim - inicio) / 10000000;
-            printf("Tempo gasto: %f segundos\n", tempo_decorrido);
-            printf("\n");
+            strcpy(mineral.nome, parteMinerais);
+            LInsere_L(&rochas.L_Mineral, mineral);
+            parteMinerais = strtok(NULL, delim);
         }
-            break;
-        
-        default:
-            break;
-        }
+        InicializaRocha(&rochas, peso_r, Categoria(&rochas), latitude, longitude);
+        LInsere_R(&L_rochas, rochas, N_rochas);
     }
-    return 0;
+    fclose(arq);
+
+    L_Compart copiaVetor = L_rochas;
+    int caso;
+    printf("insira (1) para selectionSort ou (2) para shellSort\n");
+    scanf("%d",&caso);
+    while(caso!=1 && caso!=2){
+        printf("Digito errado!!\nInsira 1-SelectionSort 2-ShellSort\n");
+        scanf("%d",&caso);
+    }
+    switch (caso)
+    {
+    case 1:{
+        start = clock();
+        selection(copiaVetor.ROOchas, LTamanho_R(&copiaVetor), &comparacoes,&trocas);
+        LImprime_R(&copiaVetor);
+        printf("\nComparacoes: %d\n",comparacoes);
+        printf("Trocas: %d\n",trocas);
+        printf("Algoritmo: SelectionSort");
+        stop = clock();
+    }
+        break;
+    case 2:{
+        start = clock();
+        Shellsort(copiaVetor.ROOchas, LTamanho_R(&copiaVetor), &comparacoes,&trocas);
+        LImprime_R(&copiaVetor);
+        printf("\nComparacoes: %d\n",comparacoes);
+        printf("Trocas: %d\n",trocas);
+        printf("Algoritmo: ShellSort");
+        stop = clock();
+    }
+    
+    default:
+        break;
+    }
+
+
+    double timep = (double)(stop - start) / CLOCKS_PER_SEC;
+    printf("\nTempo: %.5lf \n\n", timep);
+    
+
 }

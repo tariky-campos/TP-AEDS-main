@@ -1,91 +1,97 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Compartimento.h"
+#include "compartimento.h"
 
-
-void Inicializar_L_compart(L_Compart* pLista){
-    pLista->tamanho = 0;
-}
-
-
-void LInsere_R(L_Compart *pLista, rochamineral pRocha)
+void FLVazia_R(L_Compart *pLista, int n)
 {
-    if(pLista->tamanho >= MAX){
-        printf("Vetor sem espaco!\n");
-        return;
-    }
-    pLista->vetor[pLista->tamanho] = pRocha;
-    pLista->tamanho++;
-    return;
-
+    pLista->ROOchas = (rochamineral*)malloc(sizeof(rochamineral)*n);
+    pLista->pPrimeiro = 0;
+    pLista->pUltimo =pLista->pPrimeiro;
 }
 
+int LEhVazia_R(L_Compart *pLista)
+{
+    return (pLista->pPrimeiro == pLista->pUltimo);
+}
+
+int LInsere_R(L_Compart *pLista, rochamineral pRocha, int x)
+{
+    if(pLista->pUltimo == x){
+        return 0;
+    }
+    pLista->ROOchas[pLista->pUltimo++] = pRocha;
+    return 1;
+}
 
 void LImprime_R(L_Compart *pLista)
 {
-    if(pLista->tamanho ==0){
-        printf("vetor vazio!\n");
-        return;
-    }
-    printf("Lista de rochas:\n");
-    for(int i = 0; i<pLista->tamanho; i++){
-        printf("%s %1.f\n", pLista->vetor[i].categoria, pLista->vetor[i].peso);
+    
+    for(int i = pLista->pPrimeiro; i< pLista->pUltimo; i++){
+        printf("%s %.1f\n",pLista->ROOchas[i].categoria, pLista->ROOchas[i].peso);
     }
 }
 
-void LRetira_R(L_Compart* pLista, int indice) {
-    if (indice < 0 || indice >= pLista->tamanho) {
-        printf("Sem rocha\n");
-        return;
-    }
-    for (int i = indice; i < pLista->tamanho - 1; i++) {
-        pLista->vetor[i] = pLista->vetor[i + 1];
-    }
-    pLista->tamanho--;
-    return;
-}
 
-void LTroca_R(rochamineral *A, rochamineral*B)
+int LTamanho_R(L_Compart *pLista)
 {
-    rochamineral aux = *A;
-    *A = *B;
-    *B = aux;
-}
+    if(pLista->pPrimeiro == pLista->pUltimo){
+        return 0;
+    }
+    return pLista->pUltimo - pLista->pPrimeiro;
 
-void selection(rochamineral *pRochas, int n, int*comparacoes, int *trocas){
-    for(int i =0; i<n-1; i++){
-        int menorIndice =i;
-        for(int j=i+1; j<n;j++){
+}
+void selection(rochamineral *pLista, int n,int *comparacoes, int* trocas)
+{
+    int i, j, Min;
+    
+    rochamineral Aux;
+
+    for (i = 0; i < n - 1; i++)
+    {
+        Min = i;
+        for (j = i + 1; j < n; j++){
             (*comparacoes)++;
-            if(pRochas[j].peso < pRochas[menorIndice].peso){
-                menorIndice = j;
+            if (pLista[j].peso < pLista[Min].peso)
+            {
+                Min = j;  
             }
         }
-        if(menorIndice != i){
-            LTroca_R(&pRochas[i], &pRochas[menorIndice]);
-            (*trocas)++;
-        }
+
+        Aux = pLista[Min];
+        pLista[Min] = pLista[i];
+        pLista[i] = Aux;
+        (*trocas)+=3;
     }
 }
-void Shellsort (rochamineral* rocha, int n){
+void Shellsort(rochamineral *pLista, int n, int *comp, int *troc) {
     int i, j;
     int h = 1;
     rochamineral aux;
 
+    *comp = 0;  // Inicializa o contador de comparações
+    *troc = 0;  // Inicializa o contador de trocas
+
+    // Define o intervalo inicial (h)
     do h = h * 3 + 1; while (h < n);
-    do
-    {
-        h = h/3;
-        for( i = h ; i < n ; i++ )
-        {
-            aux = rocha[i]; j = i;
-            while (rocha[j - h].peso > aux.peso)
-            {
-                rocha[j] = rocha[j - h]; j -= h;
-                if (j < h) break;
+    do {
+        h = h / 3;
+        for (i = h; i < n; i++) {
+            aux = pLista[i];
+            j = i;
+
+            // Comparações e trocas no while
+            while (j >= h && pLista[j - h].peso > aux.peso) {
+                (*comp)++;  // Incrementa comparações
+                pLista[j] = pLista[j - h];
+                j -= h;
+                (*troc)++;  // Incrementa trocas
             }
-            rocha[j] = aux;
+            (*comp)++;  // Conta a última comparação do while que falhou
+
+            // Troca final, apenas se o índice mudou
+            if (j != i) (*troc)++;  
+            pLista[j] = aux;  // Insere o elemento na posição correta
         }
     } while (h != 1);
 }
