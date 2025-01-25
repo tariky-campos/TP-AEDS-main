@@ -1,0 +1,10 @@
+9
+-89.611858 -47.290966 27 Solarium Ferrolita
+12.369865 -166.874731 21 Aquavitae Terranita
+80.052116 173.25365 26 Terranita Ferrolita
+36.328385 151.448798 17 Aquavitae Calaris Ferrolita
+67.442398 -164.809937 20 Ferrolita Aquavitae
+-24.047728 75.640503 2 Terranita Ferrolita
+16.331487 40.674308 20 Ferrolita Aquavitae
+-64.828143 101.441513 22 Terranita Ferrolita
+75.783248 -17.592227 9 Solarium
