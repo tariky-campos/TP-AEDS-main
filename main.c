@@ -69,7 +69,7 @@ int main() {
         switch (caso)
         {
         case 1:{
-            selection(&compartimento, num_Operacoes,&comparacoes,&trocas);
+            selection(compartimento.vetor, compartimento.tamanho, &comparacoes, &trocas);
             LImprime_R(&compartimento);
             printf("comparacoes: %d trocas: %d", comparacoes, trocas);
             fclose(arq);
