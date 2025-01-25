@@ -68,3 +68,24 @@ void selection(rochamineral *pRochas, int n, int*comparacoes, int *trocas){
         }
     }
 }
+void Shellsort (rochamineral* rocha, int n){
+    int i, j;
+    int h = 1;
+    rochamineral aux;
+
+    do h = h * 3 + 1; while (h < n);
+    do
+    {
+        h = h/3;
+        for( i = h ; i < n ; i++ )
+        {
+            aux = rocha[i]; j = i;
+            while (rocha[j - h].peso > aux.peso)
+            {
+                rocha[j] = rocha[j - h]; j -= h;
+                if (j < h) break;
+            }
+            rocha[j] = aux;
+        }
+    } while (h != 1);
+}

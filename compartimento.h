@@ -16,5 +16,6 @@ void LInsere_R(L_Compart *pLista, rochamineral pRocha);
 void LRetira_R(L_Compart *pLista, int indice);
 
 void selection(rochamineral* pRochas, int n, int* comparacoes, int *trocas);
+void Shellsort (rochamineral* rocha, int n);
 
 #endif
